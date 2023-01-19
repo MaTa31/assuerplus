@@ -1,9 +1,11 @@
+
+
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div class="background"></div>
+  <nav>    
+    <router-link to="/about">A Propos</router-link>
   </nav>
-  <router-view/>
+  <router-view id="content"/>
 </template>
 
 <style lang="scss">
@@ -12,7 +14,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: white;
+ 
+  
 }
 
 nav {
@@ -27,4 +31,36 @@ nav {
     }
   }
 }
+
+.background{
+
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-image: url("assets/background.jpg");  
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: blur(6px);
+
+
+}
+
+#content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid lightgray;
+  padding: 4rem 4rem;
+  border-radius: 5px;
+  background: whitesmoke;
+}
+
+
+
+
+
+
+
 </style>
