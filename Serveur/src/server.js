@@ -22,10 +22,6 @@ app.use((req, res, next) => {
 });
 
 
-
-
-
-
 app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

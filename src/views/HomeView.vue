@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form >
+    <div>
       <h2 class="mb-3">AssuerPlus</h2>
       <img alt="logo Accidents" src="../assets/logoAccident.png" style = "width: 50%">
       <div class="input">
@@ -51,7 +51,7 @@
           aria-label="Close"
         ></button>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -59,6 +59,7 @@
 //import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import axios from "axios";
+
 
 export default {
   
@@ -88,7 +89,7 @@ export default {
         n_client: this.n_client
       };
 
-      axios.post(" http://localhost:5000/", newUser)
+      axios.post(" http://localhost:5000/register", newUser)
 
       
     
@@ -96,9 +97,23 @@ export default {
 
     login: function () {
 
-    console.log(this.email);
-    console.log(this.password);
-}
+      let User = {
+        email: this.email,
+        password: this.password,
+        
+      };
+
+      axios.post("http://localhost:5000/login", User)
+        .then((response) => {
+          console.log(response)
+
+          localStorage.setItem("token", response.data.token)
+          this.$router.push("/dashboard")
+        })
+        .catch((error) => { 
+          console.log(error) 
+        })  
+    }
   }, 
     
   computed : {
