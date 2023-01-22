@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+
 /* METHODE POST */
 
 router.post('/register', (req, res, next) => {
@@ -24,7 +25,7 @@ router.post('/register', (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
   
-  });
+});
     
 router.post('/login', (req, res, next) => {
 
@@ -51,6 +52,28 @@ router.post('/login', (req, res, next) => {
   .catch(error => res.status(500).json({ error }));
 });
 
+// RECUPERATION DES INFORMATION UTILISATEUR AVEC VERIFICATION TOKEN //
 
+
+router.get('/user', (req, res, next) => {
+  let token = req.headers.token; //token
+  jwt.verify(token, 'RANDOM_TOKEN_SECRET', (err, decoded) => {
+    if (err) return res.status(401).json({
+      title: 'access refusé',
+    })
+    //token valide
+    User.findOne({ _id: decoded.userId }, (err, user) => {
+      if (err) return console.log(err)
+      return res.status(200).json({
+        title: 'information utilisateur récupérées',
+        user: {
+          email: user.email,
+          n_client: user.n_client
+        }
+      })
+    })
+
+  })
+});
 
 module.exports = router;

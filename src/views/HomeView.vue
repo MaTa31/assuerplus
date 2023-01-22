@@ -105,7 +105,7 @@ export default {
 
       axios.post("http://localhost:5000/login", User)
         .then((response) => {
-          console.log(response)
+          /* console.log(response) */
 
           localStorage.setItem("token", response.data.token)
           this.$router.push("/dashboard")
@@ -259,10 +259,6 @@ export default {
   color: #0d6efd;
   cursor: pointer;
 }
-#sign_out {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-}
+
 
 </style>
