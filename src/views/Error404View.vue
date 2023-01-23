@@ -23,5 +23,17 @@
 
 <style scoped lang="scss">
  
+ .container  { 
+  
+  color: black;
+  width: 500px;
+  max-width: 95%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  
+}
 
 </style>

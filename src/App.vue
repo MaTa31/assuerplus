@@ -1,10 +1,7 @@
 
 
 <template>
-  <div class="background"></div>
-  <nav>    
-    <router-link to="/about">A Propos</router-link>
-  </nav>
+  <div class="background"></div>  
   <router-view id="content"/>
 </template>
 
@@ -12,9 +9,8 @@
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: white;
+  -moz-osx-font-smoothing: grayscale;  
+  
  
   
 }
@@ -56,7 +52,7 @@ nav {
   border-radius: 5px;
   background: whitesmoke;
 }
-
+ 
 
 
 
