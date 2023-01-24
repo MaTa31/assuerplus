@@ -3,6 +3,40 @@
 
   <div class="container">
     <div class="form d-flex flex-column">
+      <div class="alert alert-success d-flex align-items-center" role="alert" v-if="success201">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-check-circle-fill flex-shrink-0 me-2"
+          viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
+          <path
+          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+        <div>
+          Votre compte a bien été créé, veuillez vous connecter
+        </div>
+      </div>
+
+      <div class="alert alert-warning d-flex align-items-center" role="alert" v-if="warning400_500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+          viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
+          <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+        </svg>
+        <div>
+          Une erreur est survenue veuillez réessayer
+        </div>
+      </div>
+
+      <div class="alert alert-danger d-flex align-items-center" role="alert" v-if="error401">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+          viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
+          <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+        </svg>
+        <div>
+          Combinaison mail/mot de passe incorrecte
+        </div>
+      </div>
+
+
       <div class="mb-3 text-center">
         <h2>AssuerPlus</h2>
         <img alt="logo Accidents" src="../assets/logoAccident.png" style="width: 50%">
@@ -22,7 +56,7 @@
       <div class="input" v-if="mode == 'viewregister'">
         <label for="n_client">Numéro Client :</label>
         <input id="n_client" class="form-control" type="number" data-maxlength="6"
-          oninput="this.value=this.value.slice(0,this.dataset.maxlength)" name="Numéro Client" placeholder="..."
+          oninput="this.value=this.value.slice(0,this.dataset.maxlength)" placeholder="..."
           v-model="n_client" @blur="validateN_client" v-bind:class="{ 'is-invalid': invalideN_client }" />
         <div class="invalid-feedback">
           Merci d'utiliser votre numéro client à 6 chiffres
@@ -32,8 +66,7 @@
 
       <div class="input">
         <label for="password">Mot de passe :</label>
-        <input class="form-control" type="password" v-model="password" @blur="validatePwd"
-          v-bind:class="{ 'is-invalid': invalidePwd }" />
+        <input class="form-control" type="password" placeholder="..." v-model="password" @blur="validatePwd"  v-bind:class="{ 'is-invalid': invalidePwd }" />
         <div class="invalid-feedback">
           Mot de passe au minimum 8 caractère dont 1 Majuscule, 1 Minuscule, 1 Chiffre et 1 caractère spécial
           [?!@$%^&*-]
@@ -83,7 +116,11 @@ export default {
       mode: "viewlogin",
       invalideMail: false,
       invalideN_client: false,
-      invalidePwd: false
+      invalidePwd: false,
+      success201 : false,
+      warning400_500: false,
+      error401: false,
+
 
 
 
@@ -159,8 +196,14 @@ export default {
       };
 
       axios.post(" http://localhost:5000/register", newUser)
-
-
+        
+        .then((response) => {
+            if (response.status == 201) {
+              this.success201 = true;
+            } else {
+              this.warning400_500 = true;
+            }
+          })
 
     },
 
@@ -174,13 +217,17 @@ export default {
 
       axios.post("http://localhost:5000/login", User)
         .then((response) => {
-          /* console.log(response) */
-
+          
           localStorage.setItem("token", response.data.token)
           this.$router.push("/dashboard")
         })
         .catch((error) => {
-          console.log(error)
+          if (error.response.status == 401) {
+              this.error401 = true;
+            } else {
+              this.warning400_500 = true;
+            }
+          
         })
     }
   },
