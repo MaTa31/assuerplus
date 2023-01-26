@@ -7,21 +7,62 @@ const MIME_TYPES = {
 
 };
 
+const maxSize =   25 * 1000 * 1000 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'upload');
   },
 
 
+  
+
+  
   filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_');
-    const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + '.' + extension);
+
+        console.log(req.header("Content-Length"));
+        
+
+    if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"||file.mimetype == "application/pdf") {
+
+      if (req.header("Content-Length") > maxSize) {
+        
+      
+        callback(new Error( "Taille du fichier supérieur à 25MB"))
+      } else {
+  
+        const name = file.originalname.split(' ').join('_');
+        callback(null,   name   );
+      }
+    } else {
+      
+      callback(new Error( "Seulement les extensions .png, .jpg and .jpeg .pdf sont autorisés"))
+
+    }
   }
 });
+//5Mb
+/* const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == "image/png" ||
+      file.mimetype == "image/jpg" ||
+      file.mimetype == "image/jpeg"
+      ||
+      file.mimetype == "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+    }
+  },
+  limits: { fileSize: maxSize },
+}) */
 
-const Multerupload = multer({ storage: storage }).array('file',8);
+const Multerupload = multer({ storage:storage }).array('files',8);
 
-/* const Multerupload = multer({ storage: storage }).fields([{name: 'carte_verte'},{name: 'constat'},{name: 'photos', maxCount: 6 }]) */
+/* const Multerupload = multer({ storage: storage }).fields([{name: 'carte_verte'},{name: 'constat'},{name: 'photos', maxCount: 6 }]) PAS OUF*/
+/* const Multerupload = multer({ storage: storage }).any() DANGEREUX*/
 
 module.exports = { Multerupload }

@@ -1,27 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const {Multerupload} = require('../stuff/multer-config')
+const multer = require('multer');
 
 
-router.post('/sendFiles', Multerupload, function(req, res) {
 
-   
-  console.log(req.files);
+router.post('/sendFiles', function(req, res) {
   
-  (req, res, function(err) {
-    if (err) {
+  Multerupload(req, res, function(err) {
+    console.log(req.files);
+    if (err instanceof multer.MulterError) {
       console.log(err);
+      return res.status(501).send(err.message)     
       
-      return res.end("Files uploading unsucessfully!");
-    } else {
+    } else if(err){
 
-      return res.status(200).json({message : "Files uploading sucess"});
+      console.log(err);
+      return res.status(500).send(err.message) 
 
     }
-
-      
-    
-
+    return res.status(200).send("Fichier chargé avec succès")
+;
   });
 });
 
