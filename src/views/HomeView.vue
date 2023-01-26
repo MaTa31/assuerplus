@@ -195,7 +195,7 @@ export default {
         n_client: this.n_client
       };
 
-      axios.post(" http://localhost:5000/register", newUser)
+      axios.post("/register", newUser)
         
         .then((response) => {
             if (response.status == 201) {
@@ -215,7 +215,7 @@ export default {
 
       };
 
-      axios.post("http://localhost:5000/login", User)
+      axios.post("/login", User)
         .then((response) => {
           
           localStorage.setItem("token", response.data.token)

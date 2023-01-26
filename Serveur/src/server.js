@@ -1,19 +1,26 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
-const api = require('../routes/api');
+const UsersRoutes = require('../routes/Users');
 const mongoose = require('mongoose');
-/* const axios = require('axios').default; */
+const mailRoutes = require('../routes/mailler');
+const uploadRoutes = require('../routes/uploader')
+const multer = require('multer');
+
+
+
+
+
+require('dotenv').config();
+
 
 const app = express();
 
-mongoose.connect('mongodb+srv://Mickael:fNGepmXuYzf3iQIq@cluster0.vrn9u6h.mongodb.net/?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
+mongoose.connect(process.env.MONGOOSEAPI,{ useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+  
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -23,12 +30,20 @@ app.use((req, res, next) => {
 
 
 app.use(morgan('combined'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(cors({origin: '*'}));
 
 
-app.use('/', api);
+
+app.use(UsersRoutes);
+/* app.use(mailRoutes); */
+app.use(uploadRoutes);
+
+
+
+
+
 
 
 
