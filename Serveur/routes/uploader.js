@@ -2,16 +2,37 @@ const express = require('express');
 const router = express.Router();
 const {Multerupload} = require('../stuff/multer-config')
 const multer = require('multer');
+const auth = require('../stuff/authtk');
 
 
 
-router.post('/sendFiles', function(req, res) {
+
+router.post('/sendFiles', auth ,function(req, res) {
   
   Multerupload(req, res, function(err) {
-    console.log(req.files);
+
+     let files = req.files;
+
+     Object.keys(files).forEach(function (key) {
+    
+      const paths = (files[key].path) 
+
+      paths.replace(/\//g, "/")
+      console.log(paths)
+      console.log(typeof(paths))
+        
+      
+      
+      module.exports = { paths }
+
+
+    });
+
+    
+
     if (err instanceof multer.MulterError) {
       console.log(err);
-      return res.status(501).send(err.message)     
+      return res.status(500).send(err.message)     
       
     } else if(err){
 
@@ -26,17 +47,6 @@ router.post('/sendFiles', function(req, res) {
 
   
   
-
- /*  if  (req.statusCode == 500) {
-    res.status(500).json({ message : "Erreur lors de l'envoie ..." });
-  } else {
-
-    const file2 = req.file;
-    console.log(file2);    
-    exports.file3
-
-  
-  } */
 
   
 

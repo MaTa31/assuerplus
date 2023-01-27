@@ -37,7 +37,7 @@ app.use(cors({origin: '*'}));
 
 
 app.use(UsersRoutes);
-/* app.use(mailRoutes); */
+app.use(mailRoutes); 
 app.use(uploadRoutes);
 
 

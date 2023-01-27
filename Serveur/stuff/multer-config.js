@@ -10,7 +10,9 @@ const MIME_TYPES = {
 const maxSize =   25 * 1000 * 1000 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'upload');
+    callback(null, './upload');
+
+    
   },
 
 
@@ -40,25 +42,8 @@ const storage = multer.diskStorage({
     }
   }
 });
-//5Mb
-/* const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype == "image/png" ||
-      file.mimetype == "image/jpg" ||
-      file.mimetype == "image/jpeg"
-      ||
-      file.mimetype == "image/jpeg"
-    ) {
-      cb(null, true);
-    } else {
-      cb(null, false);
-      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
-    }
-  },
-  limits: { fileSize: maxSize },
-}) */
+
+
 
 const Multerupload = multer({ storage:storage }).array('files',8);
 

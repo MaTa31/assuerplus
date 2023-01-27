@@ -55,7 +55,18 @@
             d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
         </svg>
         <div>
-          le fichier ou la sommes des fichier dépasse 25Mb
+          le fichier ou la sommes des fichier dépasse {{ maxFilesSize }}Mb
+        </div>
+      </div>
+
+      <div class="alert alert-danger d-flex align-items-center" role="alert" v-if="error401">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+          viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
+          <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+        </svg>
+        <div>
+          Vous n'etes pas autorisé a effectuer cette action, merci de vous reconnecter
         </div>
       </div>
 
@@ -66,7 +77,7 @@
             d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
         </svg>
         <div>
-          Merci de sélectionner 6 fichiers maximum
+          Merci de sélectionner {{ maxFiles }} fichiers maximum
         </div>
       </div>
 
@@ -108,9 +119,9 @@
         </div>
 
         <div v-if="sinister" id="Filerules" class="text-center text-black ">Nous n'acceptons que les fichiers image
-          (png/jpeg/jpg) ou PDF d'une taille maximum de 5Mo par fichier</div>
+          (png/jpeg/jpg) ou PDF d'une taille maximum de {{ maxFilesSize/(10**6) }}Mo par fichier et de {{ maxFiles }} photos </div>
 
-        <button v-if="sinister" type="submit" class="mt-4 btn btn-success align-self-center ">Upload Documents</button>
+        <button v-if="sinister" @click="sendMail" class="mt-4 btn btn-success align-self-center ">Upload Documents</button>
 
 
 
@@ -130,6 +141,9 @@
 
 
 import axios from 'axios';
+axios.defaults.headers.common['token'] =  localStorage.getItem('token');
+
+
 
 export default {
   name: "dashboard",
@@ -142,6 +156,9 @@ export default {
       n_client: "",
       sinister: false,
       files: [],
+      maxFiles : 6,
+      maxFilesSize : 25000000,
+      timesShowAlerts : 5000,
       successUpload: false,
       warning400_500: false,
       error401: false,
@@ -164,13 +181,13 @@ export default {
 
   mounted() {
 
-    axios.get('/user', { headers: { token: localStorage.getItem('token') } })
+    axios.get('/user')
       .then(response => {
         this.email = response.data.user.email;
         this.n_client = response.data.user.n_client;
       })
       .catch((error) => {
-        if (error.response.status == 401) {
+        if (error.response.status === 401) {
           this.error401 = true;
         } else {
           this.warning400_500 = true;
@@ -186,33 +203,34 @@ export default {
 
     UploadFiles(event) {
 
-      this.noFiles = !event.target.files.length;
+      this.noFiles = !event.target.files.length; 
+      const files = event.target.files
+      const formData = new FormData();
 
       if (!event.target.files.length) {
         event.preventDefault();
         this.errorMissing = true;
         setTimeout(() => {
           this.errorMissing = false
-        }, 5000);
+        }, this.timesShowAlerts);
         return;
 
-
-
       }
-      var inputEmpty = this.$refs.input
-      const files = event.target.files
-      const formData = new FormData();
-      console.log(files)
+     
+     
+      
+      
+      
 
 
 
 
-      if (files.length > 6) {
+      if (files.length > this.maxFiles) {
         event.preventDefault();
         this.errorMax = true;
         setTimeout(() => {
           this.errorMax = false
-        }, 5000);
+        }, this.timesShowAlerts);
         return;
       }
 
@@ -224,7 +242,7 @@ export default {
 
 
         if (files[i].type == "image/png" || files[i].type == "image/jpg" || files[i].type == "image/jpeg" || files[i].type == "application/pdf") {
-          if (files[i].size > 1000 * 1000 * 25) {
+          if (files[i].size > this.maxFilesSize) {
             event.preventDefault();
             this.errorSize = true;
             setTimeout(() => {
@@ -241,34 +259,49 @@ export default {
           }, 5000);
           return;
         }
-        console.log(inputEmpty)
+       
 
       }
 
 
-
+      
 
       axios.post('/sendFiles',
         formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
+          headers: {            
+            'Content-Type': 'multipart/form-data',            
+            
+          }
         },
 
-      ).then((response) => {
-        if (response.status == 200) {
+      ).then(() => {
+        
           this.successUpload = true;
           setTimeout(() => {
             this.successUpload = false
           }, 5000)
-        } else {
-          this.warning400_500 = true;
-        }
+         
+        
       })
 
 
-        .catch(function () {
+        .catch((error) => {
+
+          if (error.response.status === 401){
+            this.error401 = true;
+          setTimeout(() => {
+            this.error401 = false
+          }, 5000)
+
+          } else {
+            this.warning400_500 = true
+            setTimeout(() => {
+              this.warning400_500 = false
+          }, 5000)
+           
+          }
+    
         });
 
       this.files = []
@@ -276,6 +309,52 @@ export default {
 
     },
 
+    sendMail(){
+
+      console.log(localStorage.getItem('token'))
+
+      axios.post('/sendMail',
+        
+        {
+          headers: {
+            token: localStorage.getItem('token'),
+            'Content-Type': 'multipart/form-data',            
+            
+          }
+        },
+
+      ).then(() => {
+        
+          this.successUpload = true;
+          setTimeout(() => {
+            this.successUpload = false
+          }, 5000)
+         
+        
+      })
+
+
+        .catch((error) => {
+
+          if (error.response.status === 401){
+            this.error401 = true;
+          setTimeout(() => {
+            this.error401 = false
+          }, 5000)
+
+          } else {
+            this.warning400_500 = true
+            setTimeout(() => {
+              this.warning400_500 = false
+          }, 5000)
+           
+          }
+    
+        });
+
+
+
+    },
 
     signOut() {
       localStorage.clear();
