@@ -3,16 +3,7 @@
   <div class="container">
     <div class="d-flex flex-column">
 
-      <div class="alert alert-success d-flex align-items-center" role="alert" v-if="successUpload">
-        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-check-circle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
-          role="img" aria-label="Warning:" style="height: 16px;">
-          <path
-            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-        </svg>
-        <div>
-          fichiers chargés avec succés !
-        </div>
-      </div>
+
 
       <div class="alert alert-warning d-flex align-items-center" role="alert" v-if="warning400_500">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
@@ -91,9 +82,18 @@
       <button class="mt-4 btn btn-danger align-self-center" @click="signOut">
         Se déconnecter
       </button>
-
-      <div v-if="!sinister" class="text-center text-black mt-4">Voulez vous déclarer un sinistre ? </div>
-      <button v-if="!sinister" class="mt-4 btn btn-primary align-self-center " @click="switchSinister">Faire une
+      <div class="mt-4 alert alert-success d-flex align-items-center" role="alert" v-if="successUpload">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-check-circle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
+          role="img" aria-label="Warning:" style="height: 16px;">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </svg>
+        <div>
+          Vos documents ont été transmis , vous pouvez vous déconnecter
+        </div>
+      </div>
+      <div v-if="!successUploadFiles" class="text-center text-black mt-4">Voulez vous déclarer un sinistre ? </div>
+      <button v-if="!successUploadFiles" class="mt-4 btn btn-primary align-self-center " @click="switchSinister">Faire une
         déclaration de sinistre</button>
       <button v-if="sinister" class="mt-4 btn btn-secondary align-self-center " @click="cancelSinister">Annuler</button>
 
@@ -121,7 +121,7 @@
           (png/jpeg/jpg) ou PDF d'une taille maximum de {{ maxFilesSize/ (10 ** 6) }}Mo par fichier et de {{ maxFiles }}
           photos </div>
 
-        <button v-if="sinister" @click.prevent="UploadFiles" class="mt-4 btn btn-success align-self-center ">Transmettre
+        <button v-if="sinister" @click.prevent="sendFiles" class="mt-4 btn btn-success align-self-center ">Transmettre
           mes
           Documents</button>
 
@@ -157,6 +157,7 @@ export default {
       email: "",
       n_client: "",
       sinister: false,
+      successUploadFiles: false,
       files: [],
       maxFiles: 6,
       maxFilesSize: 25000000,
@@ -204,7 +205,7 @@ export default {
 
 
 
-    UploadFiles(event) {
+    sendFiles(event) {
 
       this.files = []
       this.files.push(this.$refs.input1.files, this.$refs.input2.files, this.$refs.input3.files)
@@ -251,7 +252,7 @@ export default {
               this.errorSize = true;
               setTimeout(() => {
                 this.errorSize = false
-              }, 5000);
+              }, this.timesShowAlerts);
               return;
             }
 
@@ -260,7 +261,7 @@ export default {
             this.errorExt = true;
             setTimeout(() => {
               this.errorExt = false
-            }, 5000);
+            }, this.timesShowAlerts);
             return;
           }
 
@@ -283,9 +284,8 @@ export default {
       ).then(() => {
 
         this.successUpload = true;
-        setTimeout(() => {
-          this.successUpload = false
-        }, 5000)
+        this.successUploadFiles = true;
+        this.sinister = false
 
 
       })
@@ -297,13 +297,13 @@ export default {
             this.error401 = true;
             setTimeout(() => {
               this.error401 = false
-            }, 5000)
+            }, this.timesShowAlerts)
 
           } else {
             this.warning400_500 = true
             setTimeout(() => {
               this.warning400_500 = false
-            }, 5000)
+            }, this.timesShowAlerts)
 
           }
 
@@ -333,7 +333,7 @@ export default {
         this.successUpload = true;
         setTimeout(() => {
           this.successUpload = false
-        }, 5000)
+        }, this.timesShowAlerts)
 
 
       })
@@ -345,13 +345,13 @@ export default {
             this.error401 = true;
             setTimeout(() => {
               this.error401 = false
-            }, 5000)
+            }, this.timesShowAlerts)
 
           } else {
             this.warning400_500 = true
             setTimeout(() => {
               this.warning400_500 = false
-            }, 5000)
+            }, this.timesShowAlerts)
 
           }
 
