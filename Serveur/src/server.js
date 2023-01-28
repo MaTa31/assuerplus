@@ -3,9 +3,9 @@ const cors = require('cors');
 const morgan = require('morgan');
 const UsersRoutes = require('../routes/Users');
 const mongoose = require('mongoose');
-const mailRoutes = require('../routes/mailler');
-const uploadRoutes = require('../routes/uploader')
-const multer = require('multer');
+/* const mailRoutes = require('../routes/mailler'); */
+const uploadRoutes = require('../routes/uploadAndSend')
+/* const multer = require('multer'); */
 
 
 
@@ -37,7 +37,7 @@ app.use(cors({origin: '*'}));
 
 
 app.use(UsersRoutes);
-app.use(mailRoutes); 
+/* app.use(mailRoutes);  */
 app.use(uploadRoutes);
 
 

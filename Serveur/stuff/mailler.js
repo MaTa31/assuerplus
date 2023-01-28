@@ -1,12 +1,12 @@
-const express = require("express");
-const router = express.Router();
+
+
 const nodemailer = require("nodemailer");
 const User = require("../models/User");
-const auth = require("../stuff/authtk");
-const { paths } = require("./uploader");
+
 require("dotenv").config();
 
-router.post("/sendMail", auth, (req, res, next) => {
+module.exports = function (req, res)  {
+  
   User.findOne({ _id: req.userId }, (err, user) => {
     if (err) return console.log(err);
 
@@ -26,16 +26,21 @@ router.post("/sendMail", auth, (req, res, next) => {
         tls: { rejectUnauthorized: false },
       });
 
+      console.log(req.files)
+
       let info = transporter.sendMail({
         from: "assuerplus@terminastor.fr", // sender address
         to: "assuerplus@terminastor.fr", // list of receivers
         subject: "Documents de sinistre du client n° " + user.n_client, // Subject line       
         text: "Bonjour, votre client a subit un accident vous trouverez en piece jointe les documents et photos de l'evenement. Vous pouvez le contacter par mail : " + user.email + " ceci est un mail automatique veuillez ne pas repondre", // plain text body
-    
-        attachments: 
-          {
-              path: "upload/968559.png"
-          }
+        attachments:  req.files.map((a) => ({
+          filename: a.originalname,
+          path: a.path.replace(/\\/g, "/")
+          // contentType: a.mimetype, // this didn't appear to have an effect
+        }))
+          
+           
+          
       
       });
 
@@ -44,6 +49,6 @@ router.post("/sendMail", auth, (req, res, next) => {
     } catch (error) {
       console.log(error);
     }    
-  });
-});
-module.exports = router;
+  })
+};
+

@@ -8,7 +8,7 @@ const auth = require('../stuff/authtk');
 
 
 
-/* METHODE POST */
+
 
 router.post('/register', (req, res, next) => {
    

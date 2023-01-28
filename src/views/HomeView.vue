@@ -199,9 +199,15 @@ export default {
         
         .then((response) => {
             if (response.status == 201) {
-              this.success201 = true;
+              this.mode = "viewlogin"              
+              this.success201 = true
+              this.email = ""
+              this.n_client = ""
+              this.password = ""
+              
             } else {
               this.warning400_500 = true;
+
             }
           })
 
@@ -219,7 +225,7 @@ export default {
         .then((response) => {
           
           localStorage.setItem("token", response.data.token)
-          this.$router.push("/dashboard")
+           
         })
         .catch((error) => {
           if (error.response.status == 401) {
@@ -229,6 +235,8 @@ export default {
             }
           
         })
+
+      this.$router.push("/dashboard")
     }
   },
 

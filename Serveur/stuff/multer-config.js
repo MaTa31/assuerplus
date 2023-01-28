@@ -45,9 +45,9 @@ const storage = multer.diskStorage({
 
 
 
-const Multerupload = multer({ storage:storage }).array('files',8);
+module.exports = multer({ storage:storage }).array('files',8);
 
 /* const Multerupload = multer({ storage: storage }).fields([{name: 'carte_verte'},{name: 'constat'},{name: 'photos', maxCount: 6 }]) PAS OUF*/
 /* const Multerupload = multer({ storage: storage }).any() DANGEREUX*/
 
-module.exports = { Multerupload }
+/* module.exports = { Multerupload } */
