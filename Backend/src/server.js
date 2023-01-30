@@ -3,9 +3,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const UsersRoutes = require('../routes/Users');
 const mongoose = require('mongoose');
-/* const mailRoutes = require('../routes/mailler'); */
 const uploadRoutes = require('../routes/uploadAndSend')
-/* const multer = require('multer'); */
+
 
 
 
@@ -36,20 +35,13 @@ app.use(cors({origin: '*'}));
 
 
 
-app.use(UsersRoutes);
-/* app.use(mailRoutes);  */
-app.use(uploadRoutes);
+app.use('/api', UsersRoutes);
+app.use('/api' , uploadRoutes);
 
 
 
-
-
-
-
-
-
-
-
+app.use(express.static(__dirname + '/public/'))
+app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
 const port = process.env.PORT || 5000;
 
