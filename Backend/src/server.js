@@ -35,8 +35,8 @@ app.use(cors({origin: '*'}));
 
 
 
-app.use(UsersRoutes);
-app.use(uploadRoutes);
+app.use('/api',UsersRoutes);
+app.use('/api',uploadRoutes);
 
 
 

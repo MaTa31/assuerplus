@@ -185,20 +185,21 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
 
-    axios.get('/user')
-      .then(response => {
-        this.email = response.data.user.email;
-        this.n_client = response.data.user.n_client;
-      })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          this.error401 = true;
-        } else {
-          this.warning400_500 = true;
+
+    try {
+          const response = await axios.get('/user')
+          this.email = response.data.user.email;
+          this.n_client = response.data.user.n_client;
+        } catch (error) {
+          if (error.response.status == 401) {
+            this.error401 = true;
+          } else {
+            this.warning400_500 = true;
+          }
         }
-      })
+
 
   },
 

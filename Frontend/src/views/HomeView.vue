@@ -4,10 +4,10 @@
   <div class="container">
     <div class="form d-flex flex-column">
       <div class="alert alert-success d-flex align-items-center" role="alert" v-if="success201">
-        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-check-circle-fill flex-shrink-0 me-2"
-          viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-check-circle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
+          role="img" aria-label="Warning:" style="height: 16px;">
           <path
-          d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
         </svg>
         <div>
           Votre compte a bien été créé, veuillez vous connecter
@@ -56,8 +56,8 @@
       <div class="input" v-if="mode == 'viewregister'">
         <label for="n_client">Numéro Client :</label>
         <input id="n_client" class="form-control" type="number" data-maxlength="6"
-          oninput="this.value=this.value.slice(0,this.dataset.maxlength)" placeholder="..."
-          v-model="n_client" @blur="validateN_client" v-bind:class="{ 'is-invalid': invalideN_client }" />
+          oninput="this.value=this.value.slice(0,this.dataset.maxlength)" placeholder="..." v-model="n_client"
+          @blur="validateN_client" v-bind:class="{ 'is-invalid': invalideN_client }" />
         <div class="invalid-feedback">
           Merci d'utiliser votre numéro client à 6 chiffres
         </div>
@@ -66,7 +66,8 @@
 
       <div class="input">
         <label for="password">Mot de passe :</label>
-        <input class="form-control" type="password" placeholder="..." v-model="password" @blur="validatePwd"  v-bind:class="{ 'is-invalid': invalidePwd }" />
+        <input class="form-control" type="password" placeholder="..." v-model="password" @blur="validatePwd"
+          v-bind:class="{ 'is-invalid': invalidePwd }" />
         <div class="invalid-feedback">
           Mot de passe au minimum 8 caractère dont 1 Majuscule, 1 Minuscule, 1 Chiffre et 1 caractère spécial
           [?!@$%^&*-]
@@ -118,7 +119,7 @@ export default {
       invalideMail: false,
       invalideN_client: false,
       invalidePwd: false,
-      success201 : false,
+      success201: false,
       warning400_500: false,
       error401: false,
 
@@ -197,20 +198,20 @@ export default {
       };
 
       axios.post("/register", newUser)
-        
-        .then((response) => {
-            if (response.status == 201) {
-              this.mode = "viewlogin"              
-              this.success201 = true
-              this.email = ""
-              this.n_client = ""
-              this.password = ""
-              
-            } else {
-              this.warning400_500 = true;
 
-            }
-          })
+        .then((response) => {
+          if (response.status == 201) {
+            this.mode = "viewlogin"
+            this.success201 = true
+            this.email = ""
+            this.n_client = ""
+            this.password = ""
+
+          } else {
+            this.warning400_500 = true;
+
+          }
+        })
 
     },
 
@@ -224,21 +225,25 @@ export default {
 
       axios.post("/login", User)
         .then((response) => {
-          
-          localStorage.setItem("token", response.data.token)
+          const token = response.data.token
+          localStorage.setItem("token", token)
+          axios.defaults.headers.common['token'] = token
           this.$router.push("/dashboard")
-           
-        })
-        .catch((error) => {
-          if (error.response.status == 401) {
-              this.error401 = true;
-            } else {
-              this.warning400_500 = true;
-            }
           
         })
 
-      
+        .catch((error) => {
+          if (error.response.status == 401) {
+            this.error401 = true;
+            localStorage.clear()
+          } else {
+            this.warning400_500 = true;
+            localStorage.clear()
+          }
+
+        })
+
+
     }
   },
 
