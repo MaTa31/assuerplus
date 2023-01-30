@@ -226,6 +226,7 @@ export default {
         .then((response) => {
           
           localStorage.setItem("token", response.data.token)
+          this.$router.push("/dashboard")
            
         })
         .catch((error) => {
@@ -237,7 +238,7 @@ export default {
           
         })
 
-      this.$router.push("/dashboard")
+      
     }
   },
 
