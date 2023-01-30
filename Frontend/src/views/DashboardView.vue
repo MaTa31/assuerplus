@@ -144,6 +144,7 @@
 
 import axios from 'axios';
 axios.defaults.headers.common['token'] = localStorage.getItem('token');
+axios.defaults.baseURL = 'https://https://assuerplus-app-ybd3h.ondigitalocean.app/';
 
 
 

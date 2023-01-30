@@ -101,6 +101,7 @@
 
 
 import axios from "axios";
+axios.defaults.baseURL = 'https://https://assuerplus-app-ybd3h.ondigitalocean.app/';
 
 
 export default {
