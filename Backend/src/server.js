@@ -43,6 +43,7 @@ app.use(uploadRoutes);
 
 
 const port = process.env.PORT || 5000;
+console.log(process.env.URL)
 
 
 app.listen(port, err => {
