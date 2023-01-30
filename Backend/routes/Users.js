@@ -10,7 +10,7 @@ const auth = require('../stuff/authtk');
 
 
 
-router.post('/register', (req, res, next) => {
+router.post('/api/register', (req, res, next) => {
    
 
     bcrypt.hash(req.body.password, 10)
@@ -28,7 +28,7 @@ router.post('/register', (req, res, next) => {
   
 });
     
-router.post('/login', (req, res, next) => {
+router.post('/api/login', (req, res, next) => {
 
   User.findOne({ email: req.body.email })
   .then(user => {
@@ -56,7 +56,7 @@ router.post('/login', (req, res, next) => {
 // RECUPERATION DES INFORMATION UTILISATEUR AVEC VERIFICATION TOKEN //
 
 
-router.get('/user', auth, (req, res, next) => {  
+router.get('/api/user', auth, (req, res, next) => {  
 
     User.findOne({ _id: req.userId }, (err, user) => {
       if (err) return console.log(err)
