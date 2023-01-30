@@ -1,13 +1,14 @@
 {
   "name": "assuerplus",
   "version": "1.0.0",
-  "description": "Assuerplus",  
+  "description": "Assuerplus",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "npm start --prefix Backend",
     "client": "npm run serve --prefix Frontend",
     "start": "concurrently \"npm run server\" \"npm run client\""
-    
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
   }
-
 }
