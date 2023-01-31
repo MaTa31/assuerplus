@@ -36,7 +36,6 @@
         </div>
       </div>
 
-
       <div class="mb-3 text-center">
         <h2>AssuerPlus</h2>
         <img alt="logo Accidents" src="../assets/logoAccident.png" style="width: 50%">
@@ -51,7 +50,6 @@
         </div>
 
       </div>
-
 
       <div class="input" v-if="mode == 'viewregister'">
         <label for="n_client">Numéro Client :</label>
@@ -73,22 +71,16 @@
           [?!@$%^&*-]
         </div>
 
-
-
       </div>
       <div class="alternative-option mt-4" v-if="mode == 'viewlogin'">Vous n'avez pas de compte? <span
           @click="switchregister">s'enregistré</span></div>
       <div class="alternative-option mt-4" v-else>Vous avez déja un compte? <span @click="switchlogin">se
           connecter</span></div>
 
-
       <button :disabled="ChampsLogvide" type="submit" class="mt-4 btn-pers align-self-center" id="login_button"
         v-if="mode == 'viewlogin'" @click="login">Connexion</button>
       <button :disabled="Champsregistervide" type="submit" class="mt-4 btn-pers align-self-center" id="register_button"
         v-else @click="register">s'enregister</button>
-
-
-
 
       <div class="alert alert-warning alert-dismissible fade show mt-5 d-none" role="alert" id="alert_1">
         Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -102,7 +94,7 @@
 
 
 import axios from "axios";
-axios.defaults.baseURL = process.env.VUE_APP_URL_API + 'api';
+
 
 
 export default {
@@ -122,8 +114,6 @@ export default {
       success201: false,
       warning400_500: false,
       error401: false,
-
-
 
 
     };
@@ -265,9 +255,6 @@ export default {
 }
 
 
-
-
-
 </script>
 
 <style scoped lang="scss">
@@ -280,7 +267,8 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  /* text-align: center; */
+  transition: transform 1s;
+  
 
 }
 
@@ -290,6 +278,7 @@ export default {
   flex-direction: column;
   margin-bottom: 15px;
   color: black;
+  
 }
 
 .input>label {
@@ -341,8 +330,6 @@ export default {
   outline: none;
 
 
-
-
 }
 
 #login_button:enabled:hover {
@@ -371,4 +358,5 @@ export default {
   color: #0d6efd;
   cursor: pointer;
 }
+
 </style>
