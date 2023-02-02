@@ -24,9 +24,11 @@ cd Frontend npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Backend configuration
-
+```
 cd Backend start serve
-
+```
 ### Start frontend and backend server
+```
 npm start
+```
 
