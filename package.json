@@ -8,7 +8,5 @@
     "client": "npm run serve --prefix Frontend",
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
-  "dependencies": {
-    "dotenv": "^16.0.3"
-  }
+  
 }
