@@ -7,6 +7,6 @@
     "server": "npm start --prefix Backend",
     "client": "npm run serve --prefix Frontend",
     "start": "concurrently \"npm run server\" \"npm run client\""
-  },
+  }
   
 }
