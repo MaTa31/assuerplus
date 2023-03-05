@@ -2,7 +2,7 @@
 
   <div class="container">
     <div class="d-flex flex-column">
-  
+
       <div class="alert alert-warning d-flex align-items-center" role="alert" v-if="warning400_500">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
           viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
@@ -13,7 +13,7 @@
           Une erreur est survenue veuillez réessayer
         </div>
       </div>
-  
+
       <div class="alert alert-warning d-flex align-items-center" role="alert" v-if="errorMissing">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
           viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
@@ -24,7 +24,7 @@
           Merci d'ajouter des fichers à tous les champs du formulaire
         </div>
       </div>
-  
+
       <div class="alert alert-danger d-flex align-items-center" role="alert" v-if="errorExt">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
           viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
@@ -35,7 +35,7 @@
           Merci de sélectionner une extension de fichier autoriser
         </div>
       </div>
-  
+
       <div class="alert alert-danger d-flex align-items-center" role="alert" v-if="errorSize">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
           viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
@@ -46,7 +46,7 @@
           le fichier ou la sommes des fichier dépasse {{ maxFilesSize }}Mb
         </div>
       </div>
-  
+
       <div class="alert alert-danger d-flex align-items-center" role="alert" v-if="error401">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
           viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
@@ -57,7 +57,7 @@
           Vous n'etes pas autorisé a effectuer cette action, merci de vous reconnecter
         </div>
       </div>
-  
+
       <div class="alert alert-warning d-flex align-items-center" role="alert" v-if="errorMax">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
           viewBox="0 0 16 16" role="img" aria-label="Warning:" style="height: 16px;">
@@ -68,17 +68,22 @@
           Merci de sélectionner {{ maxFiles }} photos maximum
         </div>
       </div>
-  
+
       <div class="d-flex flex-row justify-content-center">
         <div class="text-center text-black">Bienvenue,&nbsp</div>
         <div id="username_display" class="display-7 text-primary">{{ email }}</div>
       </div>
-  
+
       <div class="text-center text-black ">Numéro client : {{ n_client }} </div>
-  
+
       <button class="mt-4 btn btn-danger align-self-center" @click="signOut">
         Se déconnecter
       </button>
+
+      <button v-if="successUpload" class="mt-4 btn btn-success align-self-center" @click="navigateMaps">
+        Trouver un garage
+      </button>
+
       <div class="mt-4 alert alert-success d-flex align-items-center" role="alert" v-if="successUpload">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-check-circle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
           role="img" aria-label="Warning:" style="height: 16px;">
@@ -89,43 +94,50 @@
           Vos documents ont été transmis , vous pouvez vous déconnecter
         </div>
       </div>
-      <div v-if="!successUploadFiles" class="text-center text-black mt-4">Voulez vous déclarer un sinistre ? </div>
-      <button v-if="!successUploadFiles" class="mt-4 btn btn-primary align-self-center " @click="switchSinister">Faire
+      <div v-if="!successUpload" class="text-center text-black mt-4">Voulez vous déclarer un sinistre ? </div>
+      <button v-if="!successUpload" class="mt-4 btn btn-primary align-self-center " @click="switchSinister">Faire
         une
         déclaration de sinistre</button>
       <button v-if="sinister" class="mt-4 btn btn-secondary align-self-center " @click="cancelSinister">Annuler</button>
-  
+
       <form @submit.prevent="sendFiles" action='/sendFiles' enctype='multipart/form-data' class="d-flex flex-column">
-  
+
         <div v-if="sinister" class="mb-3 mt-4">
           <label for="formFile" class="form-label text-black ">Document d'assurance (Carte verte)</label>
           <input ref="input1" class="form-control" type="file" id="formFile" accept=".jpg,.jpeg,.png,.pdf"
             name="carte_verte">
         </div>
-  
+
         <div v-if="sinister" class="mb-3 mt-4">
           <label for="formFile" class="form-label text-black">Document du constat</label>
-          <input ref="input2" class="form-control" type="file" id="formFile" accept=".jpg,.jpeg,.png,.pdf" name="constat">
+          <input ref="input2" class="form-control" type="file" id="formFile" accept=".jpg,.jpeg,.png,.pdf"
+            name="constat">
         </div>
-  
+
         <div v-if="sinister" class="mb-3 mt-4">
           <label for="formFile" class="form-label text-black">Photos du sinistre</label>
           <input ref="input3" class="form-control" type="file" id="formFile" multiple accept=".jpg,.jpeg,.png,.pdf"
             name="photos">
         </div>
-  
-        <div v-if="sinister" id="Filerules" class="text-center text-black ">Nous n'acceptons que les fichiers image
+
+        <div v-if="sinister" class="form-floating">
+          <textarea class="form-control" placeholder="commentaires" id="floatingTextarea2" style="height: 100px"
+            v-model="commentSinister"></textarea>
+          <label for="floatingTextarea2">Commentaires sur le sinistre</label>
+        </div>
+
+        <div v-if="sinister" id="Filerules" class="text-center text-black mt-4 ">Nous n'acceptons que les fichiers image
           (png/jpeg/jpg) ou PDF d'une taille maximum de {{ maxFilesSize/ (10 ** 6) }}Mo par fichier et de {{ maxFiles }}
           photos </div>
-  
+
         <button v-if="sinister" @click.prevent="sendFiles" class="mt-4 btn btn-success align-self-center ">Transmettre
           mes
           Documents</button>
-  
+
       </form>
-  
+
     </div>
-  
+
   </div>
 
 </template>
@@ -144,8 +156,8 @@ export default {
 
       email: "",
       n_client: "",
+      commentSinister: "",
       sinister: false,
-      successUploadFiles: false,
       files: [],
       maxFiles: 6,
       maxFilesSize: 25000000,
@@ -193,6 +205,7 @@ export default {
       this.files.push(this.$refs.input1.files, this.$refs.input2.files, this.$refs.input3.files)
       const arr = this.files
       const formData = new FormData();
+      formData.append('comments', this.commentSinister)
 
       if (this.$refs.input1.value === "" || this.$refs.input2.value === "" || this.$refs.input3.value === "") {
         event.preventDefault();
@@ -216,12 +229,12 @@ export default {
       for (let i = 0; i < arr.length; i++) {
 
         const filelist = arr[i]
-        console.log(filelist)
+        /* console.log(filelist) */
 
         for (const files of filelist) {
 
           formData.append('files', files)
-          console.log(files.type)
+         /*  console.log(files.type) */
 
           if (files.type == "image/png" || files.type == "image/jpg" || files.type == "image/jpeg" || files.type == "application/pdf") {
             if (files.size > this.maxFilesSize) {
@@ -244,6 +257,7 @@ export default {
       }
 
 
+
       axios.post('/sendFiles',
         formData,
         {
@@ -255,7 +269,6 @@ export default {
       ).then(() => {
 
         this.successUpload = true;
-        this.successUploadFiles = true;
         this.sinister = false
 
       })
@@ -282,49 +295,6 @@ export default {
 
     },
 
-    sendMail() {
-
-      console.log(localStorage.getItem('token'))
-      axios.post('/sendMail',
-
-        {
-          headers: {
-            token: localStorage.getItem('token'),
-            'Content-Type': 'multipart/form-data',
-
-          }
-        },
-
-      ).then(() => {
-
-        this.successUpload = true;
-        setTimeout(() => {
-          this.successUpload = false
-        }, this.timesShowAlerts)
-
-      })
-
-
-        .catch((error) => {
-
-          if (error.response.status === 401) {
-            this.error401 = true;
-            setTimeout(() => {
-              this.error401 = false
-            }, this.timesShowAlerts)
-
-          } else {
-            this.warning400_500 = true
-            setTimeout(() => {
-              this.warning400_500 = false
-            }, this.timesShowAlerts)
-
-          }
-
-        });
-
-    },
-
     signOut() {
       localStorage.clear();
       this.$router.push({ name: "home" });
@@ -337,6 +307,10 @@ export default {
     cancelSinister() {
       this.sinister = false;
     },
+
+    navigateMaps(event) {
+      window.open("https://www.google.com/maps/search/?api=1&map_action=map&query=garage+carrosserie")
+    }
   },
 };
 </script>
