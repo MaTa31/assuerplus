@@ -102,20 +102,22 @@
 
       <form @submit.prevent="sendFiles" action='/sendFiles' enctype='multipart/form-data' class="d-flex flex-column">
 
-        <div v-if="sinister" class="mb-3 mt-4">
-          <label for="formFile" class="form-label text-black ">Document d'assurance (Carte verte)</label>
+        <p v-if="sinister" class="mt-4">Les champs avec <abbr id="(obligatoire)" >*</abbr> sont obligatoires.</p>
+
+        <div v-if="sinister" class="mb-3 mt-1">
+          <label for="formFile" class="form-label text-black ">Document d'assurance (Carte verte)<abbr id="(obligatoire)">*</abbr></label>
           <input ref="input1" class="form-control" type="file" id="formFile" accept=".jpg,.jpeg,.png,.pdf"
             name="carte_verte">
         </div>
 
         <div v-if="sinister" class="mb-3 mt-4">
-          <label for="formFile" class="form-label text-black">Document du constat</label>
+          <label for="formFile" class="form-label text-black">Document du constat<abbr id="(obligatoire)">*</abbr></label>
           <input ref="input2" class="form-control" type="file" id="formFile" accept=".jpg,.jpeg,.png,.pdf"
             name="constat">
         </div>
 
         <div v-if="sinister" class="mb-3 mt-4">
-          <label for="formFile" class="form-label text-black">Photos du sinistre</label>
+          <label for="formFile" class="form-label text-black">Photos du sinistre<abbr id="(obligatoire)">*</abbr></label>
           <input ref="input3" class="form-control" type="file" id="formFile" multiple accept=".jpg,.jpeg,.png,.pdf"
             name="photos">
         </div>
@@ -321,4 +323,16 @@ export default {
   font-size: 0.7rem;
 
 }
+
+label abbr {
+  position: absolute;
+  left: 3em;
+  color: red;
+}
+
+p abbr {
+  
+  color: red;
+}
+
 </style>
