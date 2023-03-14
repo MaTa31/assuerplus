@@ -33,7 +33,7 @@ module.exports = function (req, res)  {
         from: "assuerplus@terminastor.fr", // sender address
         to: "assuerplus@terminastor.fr", // list of receivers
         subject: "Documents de sinistre du client n° " + user.n_client, // Subject line       
-        text: "Bonjour, votre client a subit un accident vous trouverez en piece jointe les documents et photos de l'evenement. Vous pouvez le contacter par mail : " + user.email + "Commentaires sur les événements de l'accidents : '" + req.body.comments + "' .Ceci est un mail automatique veuillez ne pas repondre", // plain text body
+        text: "Bonjour, votre client a subit un accident vous trouverez en piece jointe les documents et photos de l'evenement. Vous pouvez le contacter par mail : " + user.email + " Commentaires sur les événements de l'accidents : '" + req.body.comments + "' .Ceci est un mail automatique veuillez ne pas repondre", // plain text body
         attachments:  req.files.map((a) => ({
           filename: a.originalname,
           path: a.path.replace(/\\/g, "/")
